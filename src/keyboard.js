@@ -211,6 +211,243 @@ export class KeyboardEngine {
     }
   }
 
+  bindSearchEvents() {
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('focus', () => {
+      this.searchFocused = true;
+      if (searchInput.value.trim()) {
+        this.handleSearchInput(searchInput.value);
+      }
+    });
+
+    searchInput.addEventListener('blur', () => {
+      this.searchFocused = false;
+      // Delay hide to allow clicks on suggestion items
+      setTimeout(() => this.hideSuggestions(), 250);
+    });
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      this.handleSearchInput(query);
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (this.suggestionsElement && !this.suggestionsElement.classList.contains('hidden')) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          this.navigateSuggestions(1);
+          return;
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          this.navigateSuggestions(-1);
+          return;
+        }
+        if (e.key === 'Enter' && this.selectedResultIndex >= 0) {
+          e.preventDefault();
+          const selected = this.filteredResults[this.selectedResultIndex];
+          if (selected) {
+            if (selected.type === 'engine') {
+              this.app.setSearchEngine(selected.name, selected.url);
+              searchInput.value = '';
+              this.hideSuggestions();
+            } else if (selected.type === 'link') {
+              this.launchLink(selected.link, e.shiftKey);
+              this.hideSuggestions();
+            }
+            return;
+          }
+        }
+      }
+
+      if (e.key === 'Escape') {
+        this.hideSuggestions();
+        searchInput.blur();
+      }
+    });
+
+    if (searchForm) {
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.executeSearch(searchInput.value.trim(), e.shiftKey);
+      });
+    }
+  }
+
+  handleSearchInput(rawQuery) {
+    const query = rawQuery.trim();
+    if (!query) {
+      this.hideSuggestions();
+      return;
+    }
+
+    this.filteredResults = [];
+    this.selectedResultIndex = -1;
+
+    // Mode A: Search bangs (starts with :)
+    if (query.startsWith(':')) {
+      const bangQuery = query.slice(1).toLowerCase();
+      const matchingBangs = Object.entries(this.searchEngines)
+        .filter(([key, eng]) => key.startsWith(bangQuery) || eng.name.toLowerCase().includes(bangQuery))
+        .map(([key, eng]) => ({
+          type: 'engine',
+          key,
+          name: eng.name,
+          bang: `:${key}`,
+          url: eng.url
+        }));
+
+      this.filteredResults = matchingBangs;
+      this.renderSuggestions(this.filteredResults, 'engine');
+      return;
+    }
+
+    // Mode B: Link search across all categories
+    const matchingLinks = this.app.searchAllLinks(query);
+    this.filteredResults = matchingLinks.map(l => ({
+      type: 'link',
+      link: l,
+      title: l.name,
+      url: l.url,
+      catName: l.categoryName || '',
+      key: l.key
+    }));
+
+    if (this.filteredResults.length > 0) {
+      this.renderSuggestions(this.filteredResults, 'link');
+    } else {
+      this.hideSuggestions();
+    }
+  }
+
+  renderSuggestions(items, mode) {
+    if (!this.suggestionsElement) return;
+
+    if (items.length === 0) {
+      this.hideSuggestions();
+      return;
+    }
+
+    let html = '';
+    if (mode === 'engine') {
+      html = items.slice(0, 5).map((item, idx) => `
+        <div class="m3-menu-item suggestion-item ${idx === this.selectedResultIndex ? 'selected' : ''}" data-index="${idx}">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-[var(--md-sys-color-primary)]">travel_explore</span>
+            <span class="font-semibold">${item.name} Search</span>
+          </div>
+          <span class="m3-key-badge text-[10px]">${item.bang}</span>
+        </div>
+      `).join('');
+    } else {
+      html = items.slice(0, 6).map((item, idx) => `
+        <div class="m3-menu-item suggestion-item ${idx === this.selectedResultIndex ? 'selected' : ''}" data-index="${idx}">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="material-symbols-outlined text-[16px] text-[var(--md-sys-color-primary)]">bookmark</span>
+            <div class="flex flex-col truncate">
+              <span class="font-semibold truncate">${item.title}</span>
+              <span class="text-[10px] text-[var(--md-sys-color-on-surface-variant)] truncate">${item.url}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            ${item.catName ? `<span class="text-[9px] uppercase px-1.5 py-0.5 rounded bg-[var(--md-sys-color-surface-container-highest)] text-[var(--md-sys-color-outline)] font-bold">${item.catName}</span>` : ''}
+            <span class="m3-key-badge text-[10px]">${item.key}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    this.suggestionsElement.innerHTML = html;
+    clearTimeout(this.closeTimer);
+    this.suggestionsElement.classList.remove('closing', 'hidden');
+
+    // Add click listeners to items
+    this.suggestionsElement.querySelectorAll('.suggestion-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.index, 10);
+        const item = this.filteredResults[idx];
+        if (item) {
+          if (item.type === 'engine') {
+            this.app.setSearchEngine(item.name, item.url);
+            document.getElementById('search-input').value = '';
+          } else if (item.type === 'link') {
+            this.launchLink(item.link);
+          }
+          this.hideSuggestions();
+        }
+      });
+    });
+  }
+
+  navigateSuggestions(direction) {
+    if (this.filteredResults.length === 0) return;
+    this.selectedResultIndex = (this.selectedResultIndex + direction + this.filteredResults.length) % this.filteredResults.length;
+    this.renderSuggestions(this.filteredResults, this.filteredResults[0].type);
+  }
+
+  hideSuggestions() {
+    const el = this.suggestionsElement;
+    if (!el) return;
+    this.filteredResults = [];
+    this.selectedResultIndex = -1;
+    if (el.classList.contains("hidden") || el.classList.contains("closing")) return;
+    el.classList.add("closing");
+    clearTimeout(this.closeTimer);
+    this.closeTimer = setTimeout(() => {
+      el.classList.remove("closing");
+      el.classList.add("hidden");
+    }, 160);
+  }
+
+  executeSearch(rawQuery, openInCurrentTab = false) {
+    if (!rawQuery) return;
+
+    let query = rawQuery;
+    let engineUrl = this.app.getCurrentEngineUrl();
+
+    // Check for inline bang (e.g., ":yt lo-fi beats")
+    const bangMatch = query.match(/^:([a-zA-Z]+)\s*(.*)$/);
+    if (bangMatch) {
+      const bang = bangMatch[1].toLowerCase();
+      if (this.searchEngines[bang]) {
+        engineUrl = this.searchEngines[bang].url;
+        query = bangMatch[2].trim();
+      }
+    }
+
+    if (!query) return;
+
+    const finalUrl = engineUrl + encodeURIComponent(query);
+    if (openInCurrentTab) {
+      window.location.href = finalUrl;
+    } else {
+      window.open(finalUrl, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  launchLink(link, openInCurrentTab = false) {
+    setTimeout(() => {
+      if (openInCurrentTab) {
+        window.location.href = link.url;
+      } else {
+        window.open(link.url, '_blank', 'noopener,noreferrer');
+      }
+      this.hideHud();
+    }, this.launchDelay);
+  }
+
+  flashLinkCard(linkId) {
+    const card = document.querySelector(`[data-link-id="${linkId}"]`);
+    if (card) {
+      card.classList.add('launching');
+      setTimeout(() => card.classList.remove('launching'), 400);
+    }
+  }
+
   startChordTimeout() {
     clearTimeout(this.chordTimeout);
     this.chordTimeout = setTimeout(() => {
