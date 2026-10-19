@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  --radius-diag: 4px 12px 4px 12px;
+}
+
+:root {
+  /* md3 tokens — pixel flat dark */
+  --md-sys-color-primary: #D0BCFF;
+  --md-sys-color-on-primary: #381E72;
+  --md-sys-color-primary-container: #4F378B;
+  --md-sys-color-on-primary-container: #EADDFF;
+
+  --md-sys-color-secondary: #CCC2DC;
+  --md-sys-color-on-secondary: #332D41;
+  --md-sys-color-secondary-container: #4A4458;
+  --md-sys-color-on-secondary-container: #E8DEF8;
+
+  --md-sys-color-tertiary: #FFB3BA;
+  --md-sys-color-on-tertiary: #561E2D;
+  --md-sys-color-tertiary-container: #723343;
+  --md-sys-color-on-tertiary-container: #FFD9E2;
+
+  --md-sys-color-error: #FFB4AB;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000A;
+  --md-sys-color-on-error-container: #FFDAD6;
+
+  --md-sys-color-surface: #141218;
+  --md-sys-color-surface-dim: #141218;
+  --md-sys-color-surface-bright: #3B383E;
+  --md-sys-color-on-surface: #E6E0E9;
+  --md-sys-color-on-surface-variant: #CAC4D0;
+
+  --md-sys-color-surface-container-lowest: #0F0D13;
+  --md-sys-color-surface-container-low: #1D1B20;
+  --md-sys-color-surface-container: #211F26;
+  --md-sys-color-surface-container-high: #2B2930;
+  --md-sys-color-surface-container-highest: #36343B;
+
+  --md-sys-color-outline: #938F99;
+  --md-sys-color-outline-variant: #49454F;
+
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-large-increased: 20px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-extra-large-increased: 32px;
+  --md-sys-shape-corner-full: 9999px;
+
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0.0, 1.0);
+  --md-sys-motion-easing-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --md-sys-motion-easing-accelerate: cubic-bezier(0.3, 0.0, 0.8, 0.15);
+  --md-sys-motion-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --md-sys-motion-duration-short: 150ms;
+  --md-sys-motion-duration-medium: 250ms;
+  --md-sys-motion-duration-long: 400ms;
+}
+
+/* dynamic palettes */
+[data-theme="mint"] {
+  --md-sys-color-primary: #76D6B4;
+  --md-sys-color-on-primary: #00382A;
+  --md-sys-color-primary-container: #00513D;
+  --md-sys-color-on-primary-container: #93F3D0;
+  --md-sys-color-tertiary: #A2CED9;
+  --md-sys-color-tertiary-container: #204D56;
+  --md-sys-color-on-tertiary-container: #BEEAF5;
+}
+
+[data-theme="coral"] {
+  --md-sys-color-primary: #FFB59D;
+  --md-sys-color-on-primary: #5F1500;
+  --md-sys-color-primary-container: #822707;
+  --md-sys-color-on-primary-container: #FFDBD0;
+  --md-sys-color-tertiary: #E7C26C;
+  --md-sys-color-tertiary-container: #5A4300;
+  --md-sys-color-on-tertiary-container: #FFE08F;
+}
+
+[data-theme="sky"] {
+  --md-sys-color-primary: #9ECAFF;
+  --md-sys-color-on-primary: #003258;
+  --md-sys-color-primary-container: #00497D;
+  --md-sys-color-on-primary-container: #D1E4FF;
+  --md-sys-color-tertiary: #B4C5FF;
+  --md-sys-color-tertiary-container: #243E82;
+  --md-sys-color-on-tertiary-container: #DBE1FF;
+}
+
+[data-theme="rose"] {
+  --md-sys-color-primary: #FFB0CD;
+  --md-sys-color-on-primary: #5E1136;
+  --md-sys-color-primary-container: #7B294C;
+  --md-sys-color-on-primary-container: #FFD9E4;
+  --md-sys-color-tertiary: #E5BD92;
+  --md-sys-color-tertiary-container: #5C4019;
+  --md-sys-color-on-tertiary-container: #FFDDBA;
+}
+
+body {
+  font-family: 'Roboto Flex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: none;
+  transition: background-color var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-emphasized);
+}
+
+/* keyboard a11y — tonal focus, not a border */
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* shared form + layout atoms */
