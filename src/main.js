@@ -84,6 +84,16 @@ function ensureKeys() {
 }
 
 // read a key, falling back to a legacy name; copy to the new name and drop the legacy one
+function readMigratedKey(primary, legacy) {
+  const value = localStorage.getItem(primary);
+  if (value !== null) return value;
+  const old = localStorage.getItem(legacy);
+  if (old !== null) {
+    localStorage.setItem(primary, old);
+    localStorage.removeItem(legacy);
+  }
+  return old;
+}
 
 function saveSettings() {
   settings.lastActiveCategoryId = currentCategoryId;

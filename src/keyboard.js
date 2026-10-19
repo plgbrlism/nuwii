@@ -1,4 +1,5 @@
 /**
+ * Keyboard Navigation & State Machine Engine for Nuwii
  * Inspired by JumpKey & Magma
  */
 
