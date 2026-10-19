@@ -158,6 +158,78 @@
                     </button>
                 </div>
 
+        <!-- 2. Keyboard Shortcuts Cheat Sheet (?) -->
+        <div
+            id="help-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-lg p-6 flex flex-col gap-5">
+                <div class="flex items-center justify-between pb-1">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[22px] text-[var(--md-sys-color-primary)]">keyboard</span>
+                        <h2 class="text-lg font-bold text-[var(--md-sys-color-on-surface)]">Keyboard Shortcuts</h2>
+                    </div>
+                    <button id="close-help-btn" class="m3-icon-btn" title="Close">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-xs">
+                    <div class="flex flex-col gap-2">
+                        <span class="font-bold text-[var(--md-sys-color-primary)] uppercase tracking-wider text-[11px]">Navigation</span>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Select Category</span>
+                            <span class="m3-key-badge">A – Z</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Chord Launch</span>
+                            <span class="m3-key-badge">Cat → Link</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Slide Panels</span>
+                            <span class="m3-key-badge">h / l or ← →</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Cancel / Close</span>
+                            <span class="m3-key-badge">Esc</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <span class="font-bold text-[var(--md-sys-color-tertiary)] uppercase tracking-wider text-[11px]">Favorites & Search</span>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Launch Favorite</span>
+                            <span class="m3-key-badge">0 – 9</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Focus Search</span>
+                            <span class="m3-key-badge">Space or /</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Search Bangs</span>
+                            <span class="m3-key-badge">:g :y :gh :r</span>
+                        </div>
+                        <div class="flex justify-between items-center py-1.5">
+                            <span class="text-[var(--md-sys-color-on-surface-variant)]">Settings</span>
+                            <span class="m3-key-badge">Ctrl + ,</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 pt-4 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-4">
+                        <span><strong class="text-[var(--md-sys-color-primary)]">Ctrl+E</strong> Edit</span>
+                        <span><strong class="text-[var(--md-sys-color-primary)]">+</strong> Add</span>
+                        <span><strong class="text-[var(--md-sys-color-primary)]">?</strong> Help</span>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-widest text-[var(--md-sys-color-outline)]">nuwii · keyboard bookmark manager</span>
+                    <button id="got-it-btn" class="m3-btn-filled text-xs py-2 px-5 cursor-pointer">
+                        Got it
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- 3. Add Link Modal -->
         <div
             id="add-modal"

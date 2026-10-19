@@ -406,6 +406,10 @@ function submitActiveModal() {
   }
 }
 
+function toggleHelpModal() {
+  document.getElementById("help-modal")?.classList.toggle("hidden");
+}
+
 // === LINK / CATEGORY MODALS ===
 function openAddLinkModal() {
   const modal = document.getElementById("add-modal");
@@ -523,6 +527,9 @@ function getCurrentEngineUrl() {
   return searchEngineValue?.value || "https://www.google.com/search?q=";
 }
 
+document.getElementById("help-btn")?.addEventListener("click", toggleHelpModal);
+document.getElementById("close-help-btn")?.addEventListener("click", toggleHelpModal);
+document.getElementById("got-it-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("edit-btn")?.addEventListener("click", toggleEditMode);
 
 document.getElementById("cancel-modal")?.addEventListener("click", closeAllModals);
