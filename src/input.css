@@ -379,6 +379,13 @@ body {
   background-color: var(--md-sys-color-surface-container);
 }
 
+.m3-search-bar {
+  background-color: var(--md-sys-color-surface-container-high);
+  border: none;
+  border-radius: var(--radius-diag);
+  transition: border-radius var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+
 .m3-key-hud {
   position: fixed;
   bottom: 92px;

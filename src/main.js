@@ -323,3 +323,44 @@ function navigateCategory(direction) {
   }
 }
 
+// === SEARCH ENGINE CONTROLS ===
+const searchEngineValue = document.getElementById("search-engine-value");
+const selectedEngineText = document.getElementById("selected-engine-text");
+const dropdownBtn = document.getElementById("dropdown-btn");
+const dropdownMenu = document.getElementById("dropdown-menu");
+
+function setSearchEngine(name, url) {
+  if (selectedEngineText) selectedEngineText.textContent = name;
+  if (searchEngineValue) searchEngineValue.value = url;
+  document.querySelectorAll(".engine-option").forEach(opt => {
+    opt.classList.toggle("selected", opt.dataset.name === name);
+  });
+  patchSettings({ lastEngine: url });
+}
+
+function getCurrentEngineUrl() {
+  return searchEngineValue?.value || "https://www.google.com/search?q=";
+}
+
+
+// search engine dropdown
+if (dropdownBtn && dropdownMenu) {
+  dropdownBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll(".engine-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      setSearchEngine(option.dataset.name, option.dataset.value);
+      dropdownMenu.classList.add("hidden");
+      document.getElementById("search-input")?.focus();
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+      dropdownMenu.classList.add("hidden");
+    }
+  });
+}
