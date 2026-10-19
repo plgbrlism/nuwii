@@ -847,7 +847,35 @@ if (dropdownBtn && dropdownMenu) {
     }
   });
 }
+
+// === SEARCH ACROSS ALL LINKS ===
+function searchAllLinks(query) {
+  const q = query.toLowerCase();
+  return links
+    .filter(l => l.name.toLowerCase().includes(q) || l.url.toLowerCase().includes(q))
+    .map(l => ({ ...l, categoryName: categories.find(c => c.id === l.categoryId)?.name || "" }));
+}
+
+// === APP CONTEXT FOR KEYBOARD ENGINE ===
+const appContext = {
+  get isEditMode() { return isEditMode; },
   isKeyboardDriven: () => settings.keyboardDriven !== false,
+  getCategoryByKey: (key) => categories.find(c => c.key?.toUpperCase() === key.toUpperCase()),
+  getLinkByKey: (catId, key) => links.find(l => l.categoryId === catId && l.key?.toUpperCase() === key.toUpperCase()),
+  getFavoriteLink: (digit) => links.find(l => l.favorite === digit),
+  getAllLinks: () => links,
+  searchAllLinks,
+  switchCategory: (id) => scrollToCategory(id),
+  navigateCategory,
+  isAnyModalOpen,
+  closeAllModals,
+  submitActiveModal,
+  toggleHelpModal,
+  openSettingsModal,
+  openAddLinkModal,
+  toggleEditMode,
+  setSearchEngine,
+  getCurrentEngineUrl,
   assignFavoritePrompt: (digit) => {
     const linkName = prompt(`Enter name of bookmark to assign to favorite [${digit}]:`);
     if (!linkName) return;
@@ -862,6 +890,8 @@ if (dropdownBtn && dropdownMenu) {
       keyboardEngine?.showHud(`No bookmark matching "${linkName}"`, 1800);
     }
   }
+};
+
 // === INITIALIZATION ===
 loadData();
 loadSettings();
