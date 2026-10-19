@@ -535,6 +535,79 @@ function syncSettingsControls() {
   });
 }
 
+// === CONFIGURATION MODAL ===
+function currentConfig() {
+  return { version: "2.0", exportDate: new Date().toISOString(), settings, categories, links };
+}
+
+function openConfigModal() {
+  const modal = document.getElementById("config-modal");
+  if (!modal) return;
+  const favCount = links.filter(l => l.favorite !== undefined && l.favorite !== null).length;
+  document.getElementById("config-stats").innerHTML = `
+    <div class="m3-stat"><span class="m3-stat-num">${categories.length}</span><span class="m3-stat-label">Categories</span></div>
+    <div class="m3-stat"><span class="m3-stat-num">${links.length}</span><span class="m3-stat-label">Bookmarks</span></div>
+    <div class="m3-stat"><span class="m3-stat-num">${favCount}</span><span class="m3-stat-label">Favorites</span></div>`;
+  document.getElementById("config-text").value = "";
+  modal.classList.remove("hidden");
+}
+
+function downloadConfig() {
+  const blob = new Blob([JSON.stringify(currentConfig(), null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "nuwii.config.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  keyboardEngine?.showHud("Config downloaded", 1500);
+}
+
+async function copyConfig() {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(currentConfig(), null, 2));
+    keyboardEngine?.showHud("Config copied", 1500);
+  } catch {
+    keyboardEngine?.showHud("Copy blocked by browser", 1500);
+  }
+}
+
+function importConfig(text) {
+  try {
+    const parsed = JSON.parse(String(text).trim());
+    if (!Array.isArray(parsed.categories) || !Array.isArray(parsed.links)) {
+      throw new Error("categories and links arrays required");
+    }
+    categories = parsed.categories;
+    links = parsed.links;
+    if (parsed.settings) {
+      const incoming = pruneSettings({ ...settings, ...parsed.settings });
+      if (parsed.settings.showFavorites === undefined && parsed.settings.visibleWidgets) {
+        incoming.showFavorites = parsed.settings.visibleWidgets.favorites === true;
+      }
+      settings = incoming;
+    }
+    ensureKeys();
+    currentCategoryId = categories[0]?.id || "category1";
+    saveData();
+    saveSettings();
+    applySettings();
+    render();
+    closeAllModals();
+    keyboardEngine?.showHud("Configuration restored", 2000);
+  } catch (err) {
+    keyboardEngine?.showHud("Import failed: " + err.message, 2500);
+  }
+}
+
+function importConfigFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => importConfig(reader.result);
+  reader.onerror = () => keyboardEngine?.showHud("Could not read file", 2000);
+  reader.readAsText(file);
+}
+
 // === LINK / CATEGORY MODALS ===
 function openAddLinkModal() {
   const modal = document.getElementById("add-modal");
@@ -655,6 +728,9 @@ function getCurrentEngineUrl() {
 // === EVENT LISTENERS ===
 document.getElementById("settings-btn")?.addEventListener("click", openSettingsModal);
 document.getElementById("close-settings-btn")?.addEventListener("click", closeAllModals);
+document.getElementById("config-btn")?.addEventListener("click", openConfigModal);
+document.getElementById("close-config-btn")?.addEventListener("click", closeAllModals);
+
 document.getElementById("help-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("close-help-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("got-it-btn")?.addEventListener("click", toggleHelpModal);
@@ -687,6 +763,25 @@ document.querySelectorAll(".theme-choice-btn").forEach(btn => {
     patchSettings({ theme: btn.dataset.theme });
     syncSettingsControls();
   });
+});
+
+// configuration — export / import
+document.getElementById("config-download")?.addEventListener("click", downloadConfig);
+document.getElementById("config-copy")?.addEventListener("click", copyConfig);
+document.getElementById("config-import")?.addEventListener("click", () => importConfig(document.getElementById("config-text").value));
+document.getElementById("config-file")?.addEventListener("change", e => importConfigFile(e.target.files[0]));
+
+const configDrop = document.getElementById("config-drop");
+configDrop?.addEventListener("click", (e) => {
+  if (e.target.id === "config-file") return;
+  document.getElementById("config-file").click();
+});
+configDrop?.addEventListener("dragover", e => { e.preventDefault(); configDrop.classList.add("dragover"); });
+configDrop?.addEventListener("dragleave", () => configDrop.classList.remove("dragover"));
+configDrop?.addEventListener("drop", e => {
+  e.preventDefault();
+  configDrop.classList.remove("dragover");
+  importConfigFile(e.dataTransfer.files[0]);
 });
 
 // search engine dropdown

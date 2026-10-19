@@ -382,6 +382,60 @@
             </div>
         </div>
 
+        <!-- 6. Configuration (Import / Export) -->
+        <div
+            id="config-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-md p-6 flex flex-col gap-4 max-h-[85vh] overflow-y-auto hide-scrollbar">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-[var(--md-sys-color-primary)]">settings_backup_restore</span>
+                        <h3 class="text-base font-bold text-[var(--md-sys-color-on-surface)]">Configuration</h3>
+                    </div>
+                    <button id="close-config-btn" class="m3-icon-btn" title="Close">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+
+                <p class="text-[13px] text-[var(--md-sys-color-on-surface-variant)] leading-relaxed">
+                    Nuwii configuration as a single portable json file.
+                </p>
+
+                <!-- Export -->
+                <div class="m3-block">
+                    <span class="m3-label">Export</span>
+                    <div id="config-stats" class="grid grid-cols-3 gap-2"></div>
+                    <div class="flex gap-2">
+                        <button id="config-download" class="m3-btn-filled text-xs py-2 px-4 flex-1 flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">download</span>
+                            <span>Download</span>
+                        </button>
+                        <button id="config-copy" class="m3-btn-tonal text-xs py-2 px-4 flex-1 flex items-center justify-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Import -->
+                <div class="flex flex-col gap-2">
+                    <span class="m3-label">Import</span>
+                    <div id="config-drop" class="m3-dropzone">
+                        <span class="material-symbols-outlined text-[28px]">upload_file</span>
+                        <span class="text-xs font-semibold">Drop config file here or click to browse</span>
+                        <input type="file" id="config-file" accept=".json,application/json" class="hidden" />
+                    </div>
+
+                    <details class="m3-details">
+                        <summary>or paste from your clipboard [click here :>]</summary>
+                        <textarea id="config-text" rows="5" class="m3-field font-mono mt-2" placeholder="Paste configuration here..."></textarea>
+                        <button id="config-import" class="m3-btn-filled text-xs py-2 px-4 mt-2 w-full">Import pasted config</button>
+                    </details>
+                </div>
+            </div>
+        </div>
+
         <!-- 7. Delete Confirmation Modal -->
         <div
             id="delete-modal"
