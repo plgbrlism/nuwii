@@ -18,6 +18,12 @@
             id="main-content"
             class="flex-1 flex flex-col justify-center items-center w-full mx-auto px-2 py-16"
         >
+            <!-- Quick Launch Grid (injected via renderFavoritesStrip) -->
+            <div
+                id="favorites-strip"
+                class="w-full max-w-2xl mb-5 grid grid-cols-5 gap-2.5 hidden"
+            ></div>
+
             <!-- Omni Search Bar & Live Suggestions -->
             <section id="section-search" class="w-full max-w-lg px-4 mx-auto mb-5">
                 <form
@@ -137,3 +143,11 @@
 
         <!-- Transient Keyboard Breadcrumb HUD -->
         <div id="keyboard-hud" class="m3-key-hud"></div>
+                <!-- Quick Launch Strip -->
+                <div class="m3-row mt-1">
+                    <span class="m3-sub">Quick launch strip</span>
+                    <button type="button" class="m3-switch" role="switch" aria-checked="true" data-switch="favorites">
+                        <span class="m3-switch-thumb"></span>
+                    </button>
+                </div>
+

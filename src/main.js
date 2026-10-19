@@ -68,6 +68,36 @@ function render() {
   renderWorkspace();
 }
 
+function renderFavoritesStrip() {
+  const strip = document.getElementById("favorites-strip");
+  if (!strip) return;
+
+  if (settings.showFavorites !== true) {
+    strip.innerHTML = "";
+    strip.classList.add("hidden");
+    return;
+  }
+
+  const favLinks = links
+    .filter(l => l.favorite !== undefined && l.favorite !== null && l.favorite >= 0 && l.favorite <= 9)
+    .sort((a, b) => a.favorite - b.favorite);
+
+  if (favLinks.length === 0) {
+    strip.innerHTML = "";
+    strip.classList.add("hidden");
+    return;
+  }
+
+  strip.classList.remove("hidden");
+  strip.innerHTML = favLinks.map(l => `
+    <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="m3-fav-grid" title="Press '${l.favorite}' to launch">
+      <span class="m3-key-badge text-[9px] px-1 py-0.5">${l.favorite}</span>
+      ${serviceIcon(l, 24)}
+      <span class="truncate min-w-0">${l.name}</span>
+    </a>
+  `).join("");
+}
+
 function renderCategoryTabs() {
   const tabsContainer = document.getElementById("category-tabs");
   if (!tabsContainer) return;
