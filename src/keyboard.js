@@ -224,3 +224,21 @@ export class KeyboardEngine {
     this.activeCategoryKey = null;
   }
 
+  showHud(text, autoHideMs = 0) {
+    if (!this.hudElement) return;
+    this.hudElement.textContent = text;
+    this.hudElement.classList.add('visible');
+
+    if (autoHideMs > 0) {
+      clearTimeout(this.hudTimeout);
+      this.hudTimeout = setTimeout(() => {
+        this.hideHud();
+      }, autoHideMs);
+    }
+  }
+
+  hideHud() {
+    if (!this.hudElement) return;
+    this.hudElement.classList.remove('visible');
+  }
+}

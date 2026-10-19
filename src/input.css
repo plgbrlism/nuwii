@@ -379,3 +379,29 @@ body {
   background-color: var(--md-sys-color-surface-container);
 }
 
+.m3-key-hud {
+  position: fixed;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  border: none;
+  border-radius: var(--radius-diag);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  z-index: 100;
+  transition: all var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-decelerate);
+}
+.m3-key-hud.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
