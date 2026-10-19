@@ -394,3 +394,17 @@ if (dropdownBtn && dropdownMenu) {
     }
   });
 }
+  assignFavoritePrompt: (digit) => {
+    const linkName = prompt(`Enter name of bookmark to assign to favorite [${digit}]:`);
+    if (!linkName) return;
+    const link = links.find(l => l.name.toLowerCase().includes(linkName.toLowerCase()));
+    if (link) {
+      links.forEach(l => { if (l.favorite === digit) delete l.favorite; });
+      link.favorite = digit;
+      saveData();
+      render();
+      keyboardEngine?.showHud(`★ [${digit}] Assigned to ${link.name}`, 1500);
+    } else {
+      keyboardEngine?.showHud(`No bookmark matching "${linkName}"`, 1800);
+    }
+  }
