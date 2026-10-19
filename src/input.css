@@ -311,6 +311,9 @@ body {
 /* components — flat tonal, diagonal radius, zero borders */
 
 /* keyboard-driven off: hide every hint */
+:root[data-kb="off"] .m3-key-badge {
+  display: none;
+}
 
 .m3-tab-chip {
   height: 40px;

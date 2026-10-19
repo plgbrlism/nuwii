@@ -166,6 +166,13 @@ function serviceIcon(link, tile = 32) {
   }</span>`;
 }
 
+// === APPLY SETTINGS ===
+function applySettings() {
+  document.documentElement.dataset.theme = settings.theme || "lavender";
+  document.documentElement.dataset.amoled = settings.amoled ? "true" : "false";
+  document.documentElement.dataset.kb = settings.keyboardDriven === false ? "off" : "on";
+}
+
 // === RENDERING ENGINE ===
 function render() {
   renderFavoritesStrip();
@@ -788,6 +795,18 @@ document.querySelectorAll(".theme-choice-btn").forEach(btn => {
   });
 });
 
+// toggles — amoled + launch strip (delegated)
+document.addEventListener("click", (e) => {
+  const sw = e.target.closest(".m3-switch");
+  if (sw) {
+    const on = sw.getAttribute("aria-checked") !== "true";
+    sw.setAttribute("aria-checked", on ? "true" : "false");
+    const opt = sw.dataset.opt;
+    if (opt) patchSettings({ [opt]: on });
+    else if (sw.dataset.switch === "favorites") patchSettings({ showFavorites: on }, { favorites: true });
+  }
+});
+
 // configuration — export / import
 document.getElementById("config-download")?.addEventListener("click", downloadConfig);
 document.getElementById("config-copy")?.addEventListener("click", copyConfig);
@@ -828,6 +847,7 @@ if (dropdownBtn && dropdownMenu) {
     }
   });
 }
+  isKeyboardDriven: () => settings.keyboardDriven !== false,
   assignFavoritePrompt: (digit) => {
     const linkName = prompt(`Enter name of bookmark to assign to favorite [${digit}]:`);
     if (!linkName) return;

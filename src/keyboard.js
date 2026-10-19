@@ -72,6 +72,9 @@ export class KeyboardEngine {
       return;
     }
 
+    // Keyboard-driven off: all shortcut hints/handlers disabled (Escape above still works)
+    if (!this.app.isKeyboardDriven()) return;
+
     // Modal submission via Ctrl+Enter
     if (this.app.isAnyModalOpen()) {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
