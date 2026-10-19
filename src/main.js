@@ -532,6 +532,20 @@ document.getElementById("save-cat-modal")?.addEventListener("click", saveNewCate
 document.getElementById("cancel-edit-link-btn")?.addEventListener("click", closeAllModals);
 document.getElementById("save-edit-link-btn")?.addEventListener("click", saveEditLink);
 
+document.getElementById("cancel-delete-btn")?.addEventListener("click", closeAllModals);
+document.getElementById("confirm-delete-btn")?.addEventListener("click", () => {
+  if (pendingDelete.type === "link") {
+    links = links.filter((l) => l.id !== pendingDelete.id);
+  } else if (pendingDelete.type === "cat") {
+    categories = categories.filter((c) => c.id !== pendingDelete.id);
+    links = links.filter((l) => l.categoryId !== pendingDelete.id);
+    if (currentCategoryId === pendingDelete.id) currentCategoryId = categories[0]?.id || null;
+  }
+  saveData();
+  render();
+  closeAllModals();
+});
+
 // search engine dropdown
 if (dropdownBtn && dropdownMenu) {
   dropdownBtn.addEventListener("click", (e) => {
