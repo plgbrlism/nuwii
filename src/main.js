@@ -353,6 +353,26 @@ function navigateCategory(direction) {
   }
 }
 
+// === EDIT MODE ===
+function toggleEditMode() {
+  isEditMode = !isEditMode;
+  render();
+
+  const editBtn = document.getElementById("edit-btn");
+  const editDot = document.getElementById("edit-dot");
+  if (editBtn && editDot) {
+    if (isEditMode) {
+      editBtn.setAttribute("aria-checked", "true");
+      editBtn.classList.add("bg-[var(--md-sys-color-primary-container)]", "text-[var(--md-sys-color-on-primary-container)]");
+      editDot.classList.replace("bg-[var(--md-sys-color-outline)]", "bg-[var(--md-sys-color-primary)]");
+    } else {
+      editBtn.setAttribute("aria-checked", "false");
+      editBtn.classList.remove("bg-[var(--md-sys-color-primary-container)]", "text-[var(--md-sys-color-on-primary-container)]");
+      editDot.classList.replace("bg-[var(--md-sys-color-primary)]", "bg-[var(--md-sys-color-outline)]");
+    }
+  }
+}
+
 // === SEARCH ENGINE CONTROLS ===
 const searchEngineValue = document.getElementById("search-engine-value");
 const selectedEngineText = document.getElementById("selected-engine-text");
@@ -372,6 +392,7 @@ function getCurrentEngineUrl() {
   return searchEngineValue?.value || "https://www.google.com/search?q=";
 }
 
+document.getElementById("edit-btn")?.addEventListener("click", toggleEditMode);
 
 // search engine dropdown
 if (dropdownBtn && dropdownMenu) {
