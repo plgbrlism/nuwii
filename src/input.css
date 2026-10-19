@@ -186,6 +186,41 @@ body {
   opacity: 0.3;
   cursor: default;
 }
+/* m3 switch — track 52x32, thumb grows on */
+
+.m3-switch {
+  position: relative;
+  width: 52px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 2px solid var(--md-sys-color-outline);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), border-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-outline);
+  transform: translateY(-50%);
+  transition: left var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-spring), width var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-spring), height var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-spring), background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-switch[aria-checked="true"] {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+.m3-switch[aria-checked="true"] .m3-switch-thumb {
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--md-sys-color-on-primary);
+}
 
 /* collapsible option panel */
 

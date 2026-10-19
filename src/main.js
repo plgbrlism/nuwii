@@ -410,6 +410,26 @@ function toggleHelpModal() {
   document.getElementById("help-modal")?.classList.toggle("hidden");
 }
 
+// === SETTINGS MODAL ===
+function openSettingsModal() {
+  const modal = document.getElementById("settings-modal");
+  if (!modal) return;
+  syncSettingsControls();
+  modal.classList.remove("hidden");
+}
+
+function syncSettingsControls() {
+  document.querySelector('[data-opt="amoled"]')?.setAttribute("aria-checked", settings.amoled ? "true" : "false");
+  document.querySelector('[data-opt="keyboardDriven"]')?.setAttribute("aria-checked", settings.keyboardDriven !== false ? "true" : "false");
+  document.querySelector('[data-switch="favorites"]')?.setAttribute("aria-checked", settings.showFavorites === true ? "true" : "false");
+
+  document.querySelectorAll(".theme-choice-btn").forEach(b => {
+    const on = b.dataset.theme === settings.theme;
+    b.classList.toggle("bg-[var(--md-sys-color-primary-container)]", on);
+    b.classList.toggle("text-[var(--md-sys-color-on-primary-container)]", on);
+  });
+}
+
 // === LINK / CATEGORY MODALS ===
 function openAddLinkModal() {
   const modal = document.getElementById("add-modal");
@@ -527,6 +547,9 @@ function getCurrentEngineUrl() {
   return searchEngineValue?.value || "https://www.google.com/search?q=";
 }
 
+// === EVENT LISTENERS ===
+document.getElementById("settings-btn")?.addEventListener("click", openSettingsModal);
+document.getElementById("close-settings-btn")?.addEventListener("click", closeAllModals);
 document.getElementById("help-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("close-help-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("got-it-btn")?.addEventListener("click", toggleHelpModal);
@@ -551,6 +574,14 @@ document.getElementById("confirm-delete-btn")?.addEventListener("click", () => {
   saveData();
   render();
   closeAllModals();
+});
+
+// theme buttons — live preview + persist
+document.querySelectorAll(".theme-choice-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    patchSettings({ theme: btn.dataset.theme });
+    syncSettingsControls();
+  });
 });
 
 // search engine dropdown

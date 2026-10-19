@@ -150,6 +150,49 @@
 
         <!-- 1. Preferences Modal (live-apply, no save button) -->
         <div
+            id="settings-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-lg p-6 flex flex-col gap-5 max-h-[85vh] overflow-y-auto hide-scrollbar">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[22px] text-[var(--md-sys-color-primary)]">tune</span>
+                        <h2 class="text-lg font-bold text-[var(--md-sys-color-on-surface)]">Preferences</h2>
+                    </div>
+                    <button id="close-settings-btn" class="m3-icon-btn" title="Close">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+
+                <!-- Appearance -->
+                <div class="flex flex-col gap-2">
+                    <span class="m3-label">Accent Palette</span>
+                    <div class="grid grid-cols-5 gap-2">
+                        <button type="button" class="theme-choice-btn py-2.5 px-2 rounded-diag text-xs font-semibold bg-[var(--md-sys-color-surface-container-lowest)] text-center cursor-pointer hover:bg-[var(--md-sys-color-surface-container-highest)] transition-colors" data-theme="lavender">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#D0BCFF] inline-block mb-1"></span><br>Lavender
+                        </button>
+                        <button type="button" class="theme-choice-btn py-2.5 px-2 rounded-diag text-xs font-semibold bg-[var(--md-sys-color-surface-container-lowest)] text-center cursor-pointer hover:bg-[var(--md-sys-color-surface-container-highest)] transition-colors" data-theme="mint">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#76D6B4] inline-block mb-1"></span><br>Mint
+                        </button>
+                        <button type="button" class="theme-choice-btn py-2.5 px-2 rounded-diag text-xs font-semibold bg-[var(--md-sys-color-surface-container-lowest)] text-center cursor-pointer hover:bg-[var(--md-sys-color-surface-container-highest)] transition-colors" data-theme="coral">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#FFB59D] inline-block mb-1"></span><br>Coral
+                        </button>
+                        <button type="button" class="theme-choice-btn py-2.5 px-2 rounded-diag text-xs font-semibold bg-[var(--md-sys-color-surface-container-lowest)] text-center cursor-pointer hover:bg-[var(--md-sys-color-surface-container-highest)] transition-colors" data-theme="sky">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#9ECAFF] inline-block mb-1"></span><br>Sky
+                        </button>
+                        <button type="button" class="theme-choice-btn py-2.5 px-2 rounded-diag text-xs font-semibold bg-[var(--md-sys-color-surface-container-lowest)] text-center cursor-pointer hover:bg-[var(--md-sys-color-surface-container-highest)] transition-colors" data-theme="rose">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#FFB0CD] inline-block mb-1"></span><br>Rose
+                        </button>
+                    </div>
+
+                    <div class="m3-row mt-1">
+                        <span class="m3-sub">Pure black AMOLED</span>
+                        <button type="button" class="m3-switch" role="switch" aria-checked="false" data-opt="amoled">
+                            <span class="m3-switch-thumb"></span>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Quick Launch Strip -->
                 <div class="m3-row mt-1">
                     <span class="m3-sub">Quick launch strip</span>
