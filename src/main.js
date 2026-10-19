@@ -1,3 +1,21 @@
+// === SERVICE ICONS ===
+function faviconUrl(url) {
+  try {
+    return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+  } catch {
+    return null;
+  }
+}
+
+// normalized tile: favicon over a letter chip, never a globe
+function serviceIcon(link, tile = 32) {
+  const letter = (link.name || "?").trim().charAt(0).toUpperCase() || "?";
+  const fav = faviconUrl(link.url);
+  return `<span class="m3-icon-tile" style="--tile:${tile}px"><span class="m3-icon-letter">${letter}</span>${
+    fav ? `<img class="m3-icon-img" src="${fav}" alt="" onerror="this.remove()">` : ""
+  }</span>`;
+}
+
 // === RENDERING ENGINE ===
 function render() {
   renderFavoritesStrip();

@@ -238,6 +238,47 @@ body {
 
 /* normalized service icon — favicon over letter chip, no globe */
 
+.m3-icon-tile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tile, 32px);
+  height: var(--tile, 32px);
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container-highest);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.m3-icon-letter {
+  font-weight: 700;
+  font-size: calc(var(--tile, 32px) * 0.46);
+  color: var(--md-sys-color-primary);
+  line-height: 1;
+}
+.m3-icon-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: calc(var(--tile, 32px) * 0.18);
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.m3-fav-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  border: none;
+}
+
 
 .workstrip {
   width: 100vw;
