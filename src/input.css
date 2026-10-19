@@ -386,6 +386,15 @@ body {
   transition: border-radius var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
 }
 
+/* bar + suggestion menu merge into one block while the menu is open */
+#section-search:has(#search-suggestions:not(.hidden)) .m3-search-bar {
+  border-radius: 4px 12px 0 0;
+}
+#search-suggestions {
+  margin-top: 0;
+  border-radius: 0 0 4px 12px;
+}
+
 .m3-key-hud {
   position: fixed;
   bottom: 92px;
@@ -427,8 +436,18 @@ body {
   transform-origin: top;
   animation: attached-in 180ms var(--md-sys-motion-easing-emphasized);
 }
+.m3-attached-menu.closing {
+  animation: attached-out 160ms var(--md-sys-motion-easing-emphasized) forwards;
+}
+
 @keyframes attached-in {
   from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-4px);
+  }
+}
+@keyframes attached-out {
+  to {
     opacity: 0;
     transform: scale(0.9) translateY(-4px);
   }
