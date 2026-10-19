@@ -128,3 +128,82 @@ body {
 }
 
 /* shared form + layout atoms */
+
+.m3-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--md-sys-color-primary);
+}
+
+.m3-sub {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.m3-field {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: none;
+  color: var(--md-sys-color-on-surface);
+  font-size: 0.75rem;
+  outline: none;
+}
+
+.m3-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.m3-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-diag);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-icon-btn:hover {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+.m3-icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* collapsible option panel */
+
+.m3-details > summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 4px 0;
+}
+.m3-details > summary::-webkit-details-marker {
+  display: none;
+}
+.m3-details[open] > summary {
+  color: var(--md-sys-color-primary);
+}
+
+/* components — flat tonal, diagonal radius, zero borders */
+
+/* keyboard-driven off: hide every hint */
