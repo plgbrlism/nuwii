@@ -18,6 +18,14 @@
             id="main-content"
             class="flex-1 flex flex-col justify-center items-center w-full mx-auto px-2 py-16"
         >
+            <!-- Category Navigator Tabs (injected via renderCategoryTabs) -->
+            <div class="w-full max-w-4xl mb-4 flex items-center justify-center">
+                <div
+                    id="category-tabs"
+                    class="flex items-center gap-2.5 overflow-x-auto hide-scrollbar py-1"
+                ></div>
+            </div>
+
             <!-- Snap-Scrolling Workspace Panels -->
             <section id="workspace-container" class="w-full mb-20 flex justify-center">
                 <div id="workstrip" class="workstrip hide-scrollbar">

@@ -208,6 +208,56 @@ body {
 
 /* keyboard-driven off: hide every hint */
 
+.m3-tab-chip {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: var(--radius-diag);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+  user-select: none;
+  cursor: pointer;
+  border: none;
+}
+.m3-tab-chip.active {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.m3-tab-chip:not(.active) {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+}
+.m3-tab-chip:not(.active):hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+
+.m3-key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  border: none;
+  pointer-events: none;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-tab-chip.active .m3-key-badge {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-primary-container);
+}
+
 .m3-service-card {
   position: relative;
   height: 68px;

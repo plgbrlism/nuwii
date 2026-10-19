@@ -1,3 +1,48 @@
+// === HELPERS ===
+function generateId() {
+  return Date.now().toString();
+}
+
+function normalizeKey(str, takenKeys = new Set()) {
+  if (!str) return null;
+  const clean = str.toUpperCase().replace(/[^A-Z]/g, '');
+  for (const char of clean) {
+    if (!takenKeys.has(char)) return char;
+  }
+  for (let i = 65; i <= 90; i++) {
+    const char = String.fromCharCode(i);
+    if (!takenKeys.has(char)) return char;
+  }
+  return 'X';
+}
+
+function ensureKeys() {
+  const catKeys = new Set();
+  categories.forEach(cat => {
+    if (cat.key && !catKeys.has(cat.key.toUpperCase())) {
+      cat.key = cat.key.toUpperCase();
+      catKeys.add(cat.key);
+    } else {
+      cat.key = normalizeKey(cat.name, catKeys);
+      catKeys.add(cat.key);
+    }
+  });
+
+  categories.forEach(cat => {
+    const linkKeys = new Set();
+    links.filter(l => l.categoryId === cat.id).forEach(l => {
+      if (l.key && !linkKeys.has(l.key.toUpperCase())) {
+        l.key = l.key.toUpperCase();
+        linkKeys.add(l.key);
+      } else {
+        l.key = normalizeKey(l.name, linkKeys);
+        linkKeys.add(l.key);
+      }
+    });
+  });
+}
+
+// read a key, falling back to a legacy name; copy to the new name and drop the legacy one
 // === SERVICE ICONS ===
 function faviconUrl(url) {
   try {
@@ -21,6 +66,52 @@ function render() {
   renderFavoritesStrip();
   renderCategoryTabs();
   renderWorkspace();
+}
+
+function renderCategoryTabs() {
+  const tabsContainer = document.getElementById("category-tabs");
+  if (!tabsContainer) return;
+
+  let tabsHtml = categories.map((cat) => {
+    const isActive = currentCategoryId === cat.id;
+    return `
+      <div class="relative shrink-0 flex items-center">
+        <button class="m3-tab-chip ${isActive ? "active" : ""}" data-id="${cat.id}" title="Press '${cat.key}' or click to navigate">
+          <span>${cat.name}</span>
+          <span class="m3-key-badge">${cat.key}</span>
+        </button>
+        ${isEditMode ? `<button class="cat-delete-btn absolute -top-1.5 -right-1.5 w-5 h-5 rounded-diag bg-[var(--md-sys-color-error)] text-[var(--md-sys-color-on-error)] text-[10px] font-bold flex items-center justify-center hover:scale-110 transition z-10 cursor-pointer" data-id="${cat.id}" title="Delete category">✕</button>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  if (isEditMode) {
+    tabsHtml += `
+      <button id="add-cat-btn" class="h-10 px-4 rounded-diag bg-[var(--md-sys-color-surface-container)] text-[var(--md-sys-color-primary)] text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 hover:bg-[var(--md-sys-color-surface-container-high)] transition-colors cursor-pointer shrink-0">
+        <span class="material-symbols-outlined text-[16px]">add</span>
+        <span>Category</span>
+      </button>
+    `;
+  }
+
+  tabsContainer.innerHTML = tabsHtml;
+
+  tabsContainer.querySelectorAll(".m3-tab-chip").forEach((btn) => {
+    btn.addEventListener("click", () => scrollToCategory(btn.dataset.id));
+  });
+
+  if (isEditMode) {
+    document.getElementById("add-cat-btn")?.addEventListener("click", openAddCatModal);
+    tabsContainer.querySelectorAll(".cat-delete-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pendingDelete = { type: "cat", id: btn.dataset.id };
+        const cat = categories.find(c => c.id === btn.dataset.id);
+        document.getElementById("delete-modal-msg").textContent = `Delete category "${cat?.name}" and all its bookmarks?`;
+        document.getElementById("delete-modal").classList.remove("hidden");
+      });
+    });
+  }
 }
 
 // === WORKSPACE STRIP ===
