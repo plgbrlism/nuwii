@@ -1,3 +1,44 @@
+import { KeyboardEngine } from './keyboard.js';
+
+// === STATE & DATA ===
+let categories = [
+  { id: "category1", name: "Social", key: "S" },
+  { id: "category2", name: "Study", key: "T" },
+  { id: "category3", name: "Development", key: "D" },
+];
+
+let links = [
+  { id: "1", name: "Reddit", url: "https://reddit.com", categoryId: "category1", key: "R", favorite: 1 },
+  { id: "2", name: "Facebook", url: "https://facebook.com", categoryId: "category1", key: "F" },
+  { id: "3", name: "TikTok", url: "https://tiktok.com", categoryId: "category1", key: "T" },
+  { id: "4", name: "YouTube", url: "https://youtube.com", categoryId: "category1", key: "Y", favorite: 2 },
+  { id: "5", name: "Pinterest", url: "https://pinterest.com", categoryId: "category1", key: "P" },
+
+  { id: "6", name: "NotebookLM", url: "https://notebooklm.google.com", categoryId: "category2", key: "N", favorite: 3 },
+  { id: "7", name: "eLms", url: "https://elms.sti.edu", categoryId: "category2", key: "E" },
+  { id: "8", name: "Google Drive", url: "https://drive.google.com", categoryId: "category2", key: "G", favorite: 4 },
+
+  { id: "9", name: "GitHub", url: "https://github.com", categoryId: "category3", key: "G", favorite: 5 },
+  { id: "10", name: "Codeberg", url: "https://codeberg.org", categoryId: "category3", key: "C" },
+];
+
+let settings = {
+  theme: "lavender",
+  amoled: false,
+  showFavorites: true,
+  keyboardDriven: true,
+  lastActiveCategoryId: "category1",
+  lastEngine: "https://www.google.com/search?q=",
+};
+const SETTING_KEYS = Object.keys(settings);
+
+let currentCategoryId = "category1";
+let isEditMode = false;
+let pendingDelete = { type: null, id: null };
+let isProgrammaticScroll = false;
+
+let keyboardEngine = null;
+
 // === HELPERS ===
 function generateId() {
   return Date.now().toString();
@@ -43,6 +84,70 @@ function ensureKeys() {
 }
 
 // read a key, falling back to a legacy name; copy to the new name and drop the legacy one
+
+function saveSettings() {
+  settings.lastActiveCategoryId = currentCategoryId;
+  localStorage.setItem("nuwii_settings", JSON.stringify(settings));
+}
+
+function pruneSettings(raw) {
+  const out = {};
+  SETTING_KEYS.forEach(k => { if (raw[k] !== undefined) out[k] = raw[k]; });
+  return out;
+}
+
+function loadSettings() {
+  const saved = readMigratedKey("nuwii_settings", "nodezero_settings");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      const merged = pruneSettings({ ...settings, ...parsed });
+      // migrate old widget config: visibleWidgets.favorites -> showFavorites
+      if (parsed.showFavorites === undefined && parsed.visibleWidgets) {
+        merged.showFavorites = parsed.visibleWidgets.favorites === true;
+      }
+      settings = merged;
+      if (settings.lastActiveCategoryId && categories.some(c => c.id === settings.lastActiveCategoryId)) {
+        currentCategoryId = settings.lastActiveCategoryId;
+      }
+    } catch (e) {
+      console.error("Error loading settings:", e);
+    }
+  }
+  applySettings();
+}
+
+// single write path for every live setting change
+function patchSettings(patch, opts = {}) {
+  settings = pruneSettings({ ...settings, ...patch });
+  saveSettings();
+  applySettings();
+  if (opts.favorites) renderFavoritesStrip();
+}
+
+function saveData() {
+  localStorage.setItem("nuwii_categories", JSON.stringify(categories));
+  localStorage.setItem("nuwii_links", JSON.stringify(links));
+}
+
+function loadData() {
+  const savedCat = readMigratedKey("nuwii_categories", "nodezero_categories") || localStorage.getItem("categories");
+  const savedLinks = readMigratedKey("nuwii_links", "nodezero_links") || localStorage.getItem("links");
+
+  if (savedCat) {
+    try { categories = JSON.parse(savedCat); } catch (e) { console.error(e); }
+  }
+  if (savedLinks) {
+    try { links = JSON.parse(savedLinks); } catch (e) { console.error(e); }
+  }
+
+  ensureKeys();
+
+  if (categories.length > 0 && !categories.find((c) => c.id === currentCategoryId)) {
+    currentCategoryId = categories[0].id;
+  }
+}
+
 // === SERVICE ICONS ===
 function faviconUrl(url) {
   try {
@@ -619,3 +724,13 @@ if (dropdownBtn && dropdownMenu) {
       keyboardEngine?.showHud(`No bookmark matching "${linkName}"`, 1800);
     }
   }
+// === INITIALIZATION ===
+loadData();
+loadSettings();
+const savedEngine = [...document.querySelectorAll(".engine-option")].find(o => o.dataset.value === settings.lastEngine);
+if (savedEngine) setSearchEngine(savedEngine.dataset.name, savedEngine.dataset.value);
+render();
+
+keyboardEngine = new KeyboardEngine(appContext);
+
+setTimeout(() => scrollToCategory(currentCategoryId), 100);
