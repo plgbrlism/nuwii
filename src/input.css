@@ -598,6 +598,31 @@ body {
   }
 }
 
+.m3-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-diag);
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-menu-item:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
+}
+.m3-menu-item.selected {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
 /* configuration modal */
 
 .m3-block {
