@@ -143,6 +143,13 @@
 
         <!-- Transient Keyboard Breadcrumb HUD -->
         <div id="keyboard-hud" class="m3-key-hud"></div>
+
+        <!-- ==================================================================
+             MODALS & DIALOGS
+             ================================================================== -->
+
+        <!-- 1. Preferences Modal (live-apply, no save button) -->
+        <div
                 <!-- Quick Launch Strip -->
                 <div class="m3-row mt-1">
                     <span class="m3-sub">Quick launch strip</span>
@@ -150,4 +157,113 @@
                         <span class="m3-switch-thumb"></span>
                     </button>
                 </div>
+
+        <!-- 3. Add Link Modal -->
+        <div
+            id="add-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-sm p-6 flex flex-col gap-4">
+                <h3 class="text-base font-bold text-[var(--md-sys-color-on-surface)] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-[var(--md-sys-color-primary)]">add_link</span>
+                    <span>Add New Bookmark</span>
+                </h3>
+
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Name</label>
+                        <input type="text" id="link-name" placeholder="e.g. GitHub" class="m3-field" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">URL</label>
+                        <input type="text" id="link-url" placeholder="https://..." class="m3-field" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Key (A-Z)</label>
+                            <input type="text" id="link-key" maxlength="1" placeholder="Auto" class="m3-field uppercase font-mono" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Favorite (0-9)</label>
+                            <input type="number" id="link-fav" min="0" max="9" placeholder="None" class="m3-field" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-end mt-2">
+                    <button id="cancel-modal" class="m3-btn-text text-xs">Cancel</button>
+                    <button id="save-modal" class="m3-btn-filled text-xs">Save Link</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Edit Link Modal -->
+        <div
+            id="edit-link-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-sm p-6 flex flex-col gap-4">
+                <h3 class="text-base font-bold text-[var(--md-sys-color-on-surface)] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-[var(--md-sys-color-primary)]">edit</span>
+                    <span>Edit Bookmark</span>
+                </h3>
+
+                <input type="hidden" id="edit-link-id" />
+
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Name</label>
+                        <input type="text" id="edit-link-name" class="m3-field" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">URL</label>
+                        <input type="text" id="edit-link-url" class="m3-field" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Key (A-Z)</label>
+                            <input type="text" id="edit-link-key" maxlength="1" class="m3-field uppercase font-mono" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Favorite (0-9)</label>
+                            <input type="number" id="edit-link-fav" min="0" max="9" placeholder="None" class="m3-field" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-end mt-2">
+                    <button id="cancel-edit-link-btn" class="m3-btn-text text-xs">Cancel</button>
+                    <button id="save-edit-link-btn" class="m3-btn-filled text-xs">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Add Category Modal -->
+        <div
+            id="add-cat-modal"
+            class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black/60 p-4"
+        >
+            <div class="m3-dialog-container w-full max-w-sm p-6 flex flex-col gap-4">
+                <h3 class="text-base font-bold text-[var(--md-sys-color-on-surface)] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-[var(--md-sys-color-primary)]">folder_special</span>
+                    <span>New Category</span>
+                </h3>
+
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Category Name</label>
+                        <input type="text" id="category-name" placeholder="e.g. Media" class="m3-field" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--md-sys-color-on-surface-variant)] mb-1">Trigger Key (A-Z)</label>
+                        <input type="text" id="category-key" maxlength="1" placeholder="Auto" class="m3-field uppercase font-mono" />
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-end mt-2">
+                    <button id="cancel-cat-modal" class="m3-btn-text text-xs">Cancel</button>
+                    <button id="save-cat-modal" class="m3-btn-filled text-xs">Create</button>
+                </div>
+            </div>
+        </div>
 

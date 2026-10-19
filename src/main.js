@@ -373,6 +373,137 @@ function toggleEditMode() {
   }
 }
 
+// === MODALS ===
+function isAnyModalOpen() {
+  return ['settings-modal', 'help-modal', 'add-modal', 'add-cat-modal', 'edit-link-modal', 'config-modal', 'delete-modal']
+    .some(id => {
+      const el = document.getElementById(id);
+      return el && !el.classList.contains('hidden');
+    });
+}
+
+function closeAllModals() {
+  ['settings-modal', 'help-modal', 'add-modal', 'add-cat-modal', 'edit-link-modal', 'config-modal', 'delete-modal']
+    .forEach(id => document.getElementById(id)?.classList.add('hidden'));
+}
+
+function submitActiveModal() {
+  if (!document.getElementById('settings-modal')?.classList.contains('hidden')) {
+    closeAllModals();
+  } else if (!document.getElementById('add-modal')?.classList.contains('hidden')) {
+    saveNewLink();
+  } else if (!document.getElementById('edit-link-modal')?.classList.contains('hidden')) {
+    saveEditLink();
+  } else if (!document.getElementById('add-cat-modal')?.classList.contains('hidden')) {
+    saveNewCategory();
+  } else if (!document.getElementById('config-modal')?.classList.contains('hidden')) {
+    const text = document.getElementById('config-text')?.value;
+    if (text?.trim()) importConfig(text);
+  } else if (!document.getElementById('delete-modal')?.classList.contains('hidden')) {
+    document.getElementById('confirm-delete-btn')?.click();
+  } else {
+    closeAllModals();
+  }
+}
+
+// === LINK / CATEGORY MODALS ===
+function openAddLinkModal() {
+  const modal = document.getElementById("add-modal");
+  document.getElementById("link-name").value = "";
+  document.getElementById("link-url").value = "";
+  document.getElementById("link-key").value = "";
+  document.getElementById("link-fav").value = "";
+  modal.classList.remove("hidden");
+  document.getElementById("link-name").focus();
+}
+
+function openEditLinkModal(linkId) {
+  const link = links.find(l => l.id === linkId);
+  if (!link) return;
+
+  document.getElementById("edit-link-id").value = link.id;
+  document.getElementById("edit-link-name").value = link.name;
+  document.getElementById("edit-link-url").value = link.url;
+  document.getElementById("edit-link-key").value = link.key || "";
+  document.getElementById("edit-link-fav").value = link.favorite !== undefined ? link.favorite : "";
+
+  document.getElementById("edit-link-modal").classList.remove("hidden");
+  document.getElementById("edit-link-name").focus();
+}
+
+function saveEditLink() {
+  const id = document.getElementById("edit-link-id").value;
+  const name = document.getElementById("edit-link-name").value.trim();
+  let url = document.getElementById("edit-link-url").value.trim();
+  let key = document.getElementById("edit-link-key").value.trim().toUpperCase();
+  const favVal = document.getElementById("edit-link-fav").value.trim();
+
+  if (!name || !url) return keyboardEngine?.showHud("Fill in name and URL", 1800);
+  if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+
+  const link = links.find(l => l.id === id);
+  if (!link) return;
+
+  const existingKeys = new Set(links.filter(l => l.categoryId === link.categoryId && l.id !== id).map(l => l.key));
+  if (!key || existingKeys.has(key)) key = normalizeKey(name, existingKeys);
+
+  link.name = name;
+  link.url = url;
+  link.key = key;
+  link.favorite = favVal ? parseInt(favVal, 10) : undefined;
+
+  saveData();
+  render();
+  closeAllModals();
+  keyboardEngine?.showHud(`Updated ${name} [${key}]`, 1200);
+}
+
+function openAddCatModal() {
+  const modal = document.getElementById("add-cat-modal");
+  document.getElementById("category-name").value = "";
+  document.getElementById("category-key").value = "";
+  modal.classList.remove("hidden");
+  document.getElementById("category-name").focus();
+}
+
+function saveNewLink() {
+  const name = document.getElementById("link-name").value.trim();
+  let url = document.getElementById("link-url").value.trim();
+  let key = document.getElementById("link-key").value.trim().toUpperCase();
+  const favVal = document.getElementById("link-fav").value.trim();
+
+  if (!name || !url) return keyboardEngine?.showHud("Fill in name and URL", 1800);
+  if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+
+  const existingKeys = new Set(links.filter(l => l.categoryId === currentCategoryId).map(l => l.key));
+  if (!key || existingKeys.has(key)) key = normalizeKey(name, existingKeys);
+
+  links.push({ id: generateId(), name, url, categoryId: currentCategoryId, key, favorite: favVal ? parseInt(favVal, 10) : undefined });
+  saveData();
+  render();
+  closeAllModals();
+  keyboardEngine?.showHud(`Saved ${name} [${key}]`, 1200);
+}
+
+function saveNewCategory() {
+  const name = document.getElementById("category-name").value.trim();
+  let key = document.getElementById("category-key").value.trim().toUpperCase();
+
+  if (!name) return keyboardEngine?.showHud("Enter a category name", 1800);
+
+  const existingKeys = new Set(categories.map(c => c.key));
+  if (!key || existingKeys.has(key)) key = normalizeKey(name, existingKeys);
+
+  const newId = generateId();
+  categories.push({ id: newId, name, key });
+  currentCategoryId = newId;
+  saveData();
+  render();
+  closeAllModals();
+  scrollToCategory(newId);
+  keyboardEngine?.showHud(`Created ${name} [${key}]`, 1200);
+}
+
 // === SEARCH ENGINE CONTROLS ===
 const searchEngineValue = document.getElementById("search-engine-value");
 const selectedEngineText = document.getElementById("selected-engine-text");
@@ -393,6 +524,13 @@ function getCurrentEngineUrl() {
 }
 
 document.getElementById("edit-btn")?.addEventListener("click", toggleEditMode);
+
+document.getElementById("cancel-modal")?.addEventListener("click", closeAllModals);
+document.getElementById("save-modal")?.addEventListener("click", saveNewLink);
+document.getElementById("cancel-cat-modal")?.addEventListener("click", closeAllModals);
+document.getElementById("save-cat-modal")?.addEventListener("click", saveNewCategory);
+document.getElementById("cancel-edit-link-btn")?.addEventListener("click", closeAllModals);
+document.getElementById("save-edit-link-btn")?.addEventListener("click", saveEditLink);
 
 // search engine dropdown
 if (dropdownBtn && dropdownMenu) {

@@ -451,6 +451,14 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+.m3-dialog-container {
+  background-color: var(--md-sys-color-surface-container-high);
+  border-radius: var(--radius-diag);
+  border: none;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* attached floating menu — cohesive with the control it drops from */
 .m3-attached-menu {
   display: none;
   flex-direction: column;
@@ -481,4 +489,50 @@ body {
     opacity: 0;
     transform: scale(0.9) translateY(-4px);
   }
+}
+.m3-btn-filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: var(--radius-diag);
+  padding: 8px 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-btn-filled:hover {
+  opacity: 0.92;
+}
+
+.m3-btn-tonal {
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--radius-diag);
+  padding: 8px 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-btn-tonal:hover {
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+.m3-btn-text {
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  border-radius: var(--radius-diag);
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-btn-text:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
 }
