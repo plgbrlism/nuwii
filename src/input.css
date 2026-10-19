@@ -196,6 +196,65 @@ body {
   opacity: 0.3;
   cursor: default;
 }
+
+/* retractable header — toggle pill + sliding menu pill */
+.m3-pill-toggle {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), transform var(--md-sys-motion-duration-medium) var(--md-sys-motion-easing-spring);
+}
+.m3-pill-toggle:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+.m3-pill-toggle[aria-expanded="true"] {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.m3-pill-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--radius-diag);
+  background-color: var(--md-sys-color-surface-container);
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-width 280ms var(--md-sys-motion-easing-emphasized), opacity 180ms var(--md-sys-motion-easing-emphasized);
+}
+.m3-pill-menu.open {
+  opacity: 1;
+  padding: 0 6px;
+}
+
+.m3-pill-item {
+  height: 40px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  border-radius: var(--radius-diag);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized), color var(--md-sys-motion-duration-short) var(--md-sys-motion-easing-emphasized);
+}
+.m3-pill-item:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+
 /* m3 switch — track 52x32, thumb grows on */
 
 .m3-switch {

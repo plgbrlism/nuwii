@@ -736,6 +736,29 @@ document.getElementById("close-help-btn")?.addEventListener("click", toggleHelpM
 document.getElementById("got-it-btn")?.addEventListener("click", toggleHelpModal);
 document.getElementById("edit-btn")?.addEventListener("click", toggleEditMode);
 
+// header pill — slide out, retract on item click / outside click
+const pillMenu = document.getElementById("pill-menu");
+const pillToggle = document.getElementById("pill-toggle");
+function setHeaderPill(open) {
+  if (!pillMenu) return;
+  if (open) {
+    // measure so long menus never clip (adds 12px side padding when open)
+    pillMenu.style.maxWidth = (pillMenu.scrollWidth + 12) + "px";
+    pillMenu.classList.add("open");
+  } else {
+    pillMenu.classList.remove("open");
+    pillMenu.style.maxWidth = "0px";
+  }
+  pillToggle?.setAttribute("aria-expanded", open ? "true" : "false");
+}
+pillToggle?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  setHeaderPill(!pillMenu.classList.contains("open"));
+});
+document.addEventListener("click", (e) => {
+  if (pillMenu && !pillMenu.contains(e.target) && e.target !== pillToggle) setHeaderPill(false);
+});
+
 document.getElementById("cancel-modal")?.addEventListener("click", closeAllModals);
 document.getElementById("save-modal")?.addEventListener("click", saveNewLink);
 document.getElementById("cancel-cat-modal")?.addEventListener("click", closeAllModals);

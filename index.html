@@ -13,6 +13,38 @@
     </head>
 
     <body class="min-h-screen flex flex-col justify-between selection:bg-[var(--md-sys-color-primary-container)] selection:text-[var(--md-sys-color-on-primary-container)]">
+        <!-- Top-right action pill -->
+        <header class="fixed top-6 right-6 z-40 flex items-center gap-2.5">
+            <div id="pill-menu" class="m3-pill-menu">
+                <button id="settings-btn" title="Preferences (Ctrl+,)" class="m3-pill-item">
+                    <span class="material-symbols-outlined text-[18px]">tune</span>
+                    <span class="text-xs font-semibold tracking-wider uppercase">Preferences</span>
+                </button>
+                <button id="config-btn" title="Import / Export configuration" class="m3-pill-item">
+                    <span class="material-symbols-outlined text-[18px]">sync_alt</span>
+                    <span class="text-xs font-semibold tracking-wider uppercase">Config</span>
+                </button>
+                <button id="edit-btn" role="switch" aria-checked="false" title="Edit Mode (Ctrl+E)" class="m3-pill-item">
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                    <span class="text-xs font-semibold tracking-wider uppercase">Edit</span>
+                    <span id="edit-dot" class="w-2 h-2 rounded-full bg-[var(--md-sys-color-outline)] transition-colors duration-300"></span>
+                </button>
+                <button id="help-btn" title="Keyboard Shortcuts (?)" class="m3-pill-item">
+                    <span class="material-symbols-outlined text-[18px]">keyboard</span>
+                    <span class="text-xs font-semibold tracking-wider uppercase">Keyboard</span>
+                </button>
+            </div>
+
+            <button
+                id="pill-toggle"
+                title="Settings"
+                aria-expanded="false"
+                class="m3-pill-toggle"
+            >
+                <span class="material-symbols-outlined text-[20px]">settings</span>
+            </button>
+        </header>
+
         <!-- Main Workspace -->
         <main
             id="main-content"
